@@ -1,17 +1,55 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-  <meta charset="UTF-8">
-  <title>Mustafa Downloader</title>
-</head>
-<body style="text-align:center; font-family:Arial">
+<body style="text-align:center; font-family:Arial; padding:40px;">
 
   <h1>🚀 Mustafa Downloader</h1>
   <p>الموقع شغال بنجاح ✅</p>
 
-  <a href="test.MP4" download>
-    ⬇️ تحميل الملف
-  </a>
+  <input
+    id="videoUrl"
+    type="text"
+    placeholder="ضع رابط الفيديو هنا"
+    style="width:90%; padding:10px; font-size:16px;"
+  />
+
+  <br><br>
+
+  <button
+    onclick="startDownload()"
+    style="padding:10px 25px; font-size:16px; cursor:pointer;"
+  >
+    تحميل
+  </button>
+
+  <p id="status" style="margin-top:20px;"></p>
+
+  <script>
+    async function startDownload() {
+      const url = document.getElementById("videoUrl").value;
+      const status = document.getElementById("status");
+
+      if (!url) {
+        status.innerText = "❌ رجاءً ضع رابط أولاً";
+        return;
+      }
+
+      status.innerText = "⏳ جاري جلب رابط التحميل...";
+
+      try {
+        const api = "https://mustafa-dl.mustfasaud8.workers.dev/?url=" + encodeURIComponent(url);
+        const res = await fetch(api);
+        const data = await res.json();
+
+        if (data.download) {
+          status.innerHTML = `
+            ✅ جاهز للتحميل<br><br>
+            <a href="${data.download}" target="_blank">⬇️ اضغط هنا للتحميل</a>
+          `;
+        } else {
+          status.innerText = "❌ لم يتم العثور على رابط تحميل";
+        }
+      } catch (e) {
+        status.innerText = "❌ خطأ بالاتصال";
+      }
+    }
+  </script>
 
 </body>
-</html>
